@@ -159,7 +159,7 @@ The main module containing all the Spotify API functions.
 
 The Musixmatch API module containing functions to search and fetch lyrics. No authentication needed.
 
-- ### `search(terms: string)`: [*`MusixmatchSearch[]`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/musixmatchSearch.ts)
+- ### `search(terms: string)`: [*`Promise<MusixmatchSearch[]>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/musixmatchSearch.ts)
 
   Search the Musixmatch library with the terms provided.
 
