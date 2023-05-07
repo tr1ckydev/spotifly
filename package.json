@@ -1,0 +1,43 @@
+{
+  "name": "spotifly.js",
+  "version": "0.0.1",
+  "description": "Spotify library in typescript without using the Spotify Web API.",
+  "main": "dist/index.js",
+  "type": "module",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "package.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tr1ckydev/spotifly.js.git"
+  },
+  "keywords": [
+    "api",
+    "music",
+    "spotify",
+    "spotifly",
+    "spotifly.js",
+    "spotify-api",
+    "spotify-web-api"
+  ],
+  "author": "tr1ckydev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tr1ckydev/spotifly.js/issues"
+  },
+  "homepage": "https://github.com/tr1ckydev/spotifly.js#readme",
+  "engines": {
+    "node": ">=17.5.0"
+  },
+  "devDependencies": {
+    "bun-types": "^0.5.8"
+  }
+}
