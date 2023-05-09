@@ -1,4 +1,4 @@
-# ![](https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png) `spotifly.js`
+# ![](https://open.spotifycdn.com/cdn/images/favicon32.b64ecc03.png) `spotifly`
 
 ## Spotify with wings !
 
@@ -22,12 +22,12 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 
 - ### Installation
 
-  `npm i spotifly.js` or `bun i spotifly.js`
+  `npm i spotifly` or `bun i spotifly`
 
 - ### Usage
 
   ```typescript
-  import { Spotifly } from "spotifly.js";
+  import { Spotifly } from "spotifly";
   
   const sp = new Spotifly();
   const track = await sp.getTrack("abcdefghijk");
@@ -73,75 +73,75 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 
 The main module containing all the Spotify API functions.
 
-- ### `getHomepage()`: [*`Promise<SpotifyHome>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/home.ts)
+- ### `getHomepage()`: [*`Promise<SpotifyHome>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/home.ts)
 
   Fetch the Spotify homepage data.
 
-- ### `getTrack(id: string)`: [*`Promise<SpotifyTrack>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/track.ts)
+- ### `getTrack(id: string)`: [*`Promise<SpotifyTrack>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/track.ts)
 
   Fetch the details of the provided track id.
 
-- ### `getRelatedTrackArtists(id: string)`: [*`Promise<SpotifyRelatedTrackArtists>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/relatedTrackArtists.ts)
+- ### `getRelatedTrackArtists(id: string)`: [*`Promise<SpotifyRelatedTrackArtists>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/relatedTrackArtists.ts)
 
   Fetch the related artists of the artist of the provided track id.
 
-- ### `getArtist(id: string)`: [*`Promise<SpotifyArtist>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/artist.ts)
+- ### `getArtist(id: string)`: [*`Promise<SpotifyArtist>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/artist.ts)
 
   Fetch the details of the provided artist id.
 
-- ### `getAlbum(id: string, limit?: number)`: [*`Promise<SpotifyAlbum>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/album.ts)
+- ### `getAlbum(id: string, limit?: number)`: [*`Promise<SpotifyAlbum>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/album.ts)
 
   Fetch the details of the provided album id, with optional limit for amount of tracks to fetch.
 
-- ### `getPlaylist(id: string, limit?: number)`: [*`Promise<SpotifyPlaylist>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/playlist.ts)
+- ### `getPlaylist(id: string, limit?: number)`: [*`Promise<SpotifyPlaylist>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/playlist.ts)
 
   Fetch the details of the provided playlist id, with optional limit for amount of tracks to fetch.
 
-- ### `getUser(id: string, config?:  { playlistLimit?: number, artistLimit?: number, episodeLimit?: number })`: [*`Promise<SpotifyUser>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/user.ts)
+- ### `getUser(id: string, config?:  { playlistLimit?: number, artistLimit?: number, episodeLimit?: number })`: [*`Promise<SpotifyUser>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/user.ts)
 
   Fetch the details of the provided user id, with optional limit for amount of tracks to fetch.
 
-- ### `getSection(id: string)`: [*`Promise<SpotifySection>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/section.ts)
+- ### `getSection(id: string)`: [*`Promise<SpotifySection>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/section.ts)
 
   Fetch the details of the provided section id.
 
-- ### `getPodcast(id: string)`: [*`Promise<SpotifyPodcast>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/podcast.ts)
+- ### `getPodcast(id: string)`: [*`Promise<SpotifyPodcast>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/podcast.ts)
 
   Fetch the details of the provided show id.
 
-- ### `getPodcastEpisodes(id: string, limit?: number)`: [*`Promise<SpotifyPodcastEpisodes>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/podcastEpisodes.ts)
+- ### `getPodcastEpisodes(id: string, limit?: number)`: [*`Promise<SpotifyPodcastEpisodes>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/podcastEpisodes.ts)
 
   Fetch the episodes of the provided show id, with optional limit for amount of episodes to fetch.
 
-- ### `getEpisode(id: string)`: [*`Promise<SpotifyEpisode>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/episode.ts)
+- ### `getEpisode(id: string)`: [*`Promise<SpotifyEpisode>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/episode.ts)
 
   Fetch the details of the provided episode id.
 
-- ### `searchAll(terms: string, limit?: number)`: [*`Promise<SpotifySearchAll>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchAll.ts)
+- ### `searchAll(terms: string, limit?: number)`: [*`Promise<SpotifySearchAll>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchAll.ts)
 
   Search the Spotify library with the terms provided, for all types of content, with optional limit for amount of search results to fetch.
 
-- ### `searchTracks(terms: string, limit?: number)`: [*`Promise<SpotifySearchTracks>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchTracks.ts)
+- ### `searchTracks(terms: string, limit?: number)`: [*`Promise<SpotifySearchTracks>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchTracks.ts)
 
   Search the Spotify library with the terms provided, for tracks, with optional limit for amount of search results to fetch.
 
-- ### `searchAlbums(terms: string, limit?: number)`: [*`Promise<SpotifySearchAlbums>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchAlbums.ts)
+- ### `searchAlbums(terms: string, limit?: number)`: [*`Promise<SpotifySearchAlbums>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchAlbums.ts)
 
   Search the Spotify library with the terms provided, for albums, with optional limit for amount of search results to fetch.
 
-- ### `searchPlaylists(terms: string, limit?: number)`: [*`Promise<SpotifySearchPlaylists>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchPlaylists.ts)
+- ### `searchPlaylists(terms: string, limit?: number)`: [*`Promise<SpotifySearchPlaylists>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchPlaylists.ts)
 
   Search the Spotify library with the terms provided, for playlists, with optional limit for amount of search results to fetch.
 
-- ### `searchArtists(terms: string, limit?: number)`: [*`Promise<SpotifySearchArtists>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchArtists.ts)
+- ### `searchArtists(terms: string, limit?: number)`: [*`Promise<SpotifySearchArtists>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchArtists.ts)
 
   Search the Spotify library with the terms provided, for artists, with optional limit for amount of search results to fetch.
 
-- ### `searchUsers(terms: string, limit?: number)`: [*`Promise<SpotifySearchUsers>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchUsers.ts)
+- ### `searchUsers(terms: string, limit?: number)`: [*`Promise<SpotifySearchUsers>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchUsers.ts)
 
   Search the Spotify library with the terms provided, for users, with optional limit for amount of search results to fetch.
 
-- ### `searchPodcasts(terms: string, limit?: number)`: [*`Promise<SpotifySearchPodcasts>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/searchPodcasts.ts)
+- ### `searchPodcasts(terms: string, limit?: number)`: [*`Promise<SpotifySearchPodcasts>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/searchPodcasts.ts)
 
   Search the Spotify library with the terms provided, for podcasts and shows, with optional limit for amount of search results to fetch.
 
@@ -149,7 +149,7 @@ The main module containing all the Spotify API functions.
 
   Fetch the lyrics of the provided track id through the [`Musixmatch`](#musixmatch-module) module.
 
-- ### `extractImageColors(...urls: string[])`: [*`Promise<SpotifyExtractedColors>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/extractedColors.ts)
+- ### `extractImageColors(...urls: string[])`: [*`Promise<SpotifyExtractedColors>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/extractedColors.ts)
 
   Extract raw, dark and light colors from the provided urls of images using Spotify API.
 
@@ -159,7 +159,7 @@ The main module containing all the Spotify API functions.
 
 The Musixmatch API module containing functions to search and fetch lyrics. No authentication needed.
 
-- ### `search(terms: string)`: [*`Promise<MusixmatchSearch[]>`*](https://github.com/tr1ckydev/spotifly.js/blob/main/src/types/musixmatchSearch.ts)
+- ### `search(terms: string)`: [*`Promise<MusixmatchSearch[]>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/musixmatchSearch.ts)
 
   Search the Musixmatch library with the terms provided.
 
@@ -191,4 +191,4 @@ The parsing module containing few utility functions.
 
 ## 📜 License
 
-This repository uses MIT License. See [LICENSE](https://github.com/tr1ckydev/spotifly.js/blob/main/LICENSE) for full license text.
+This repository uses MIT License. See [LICENSE](https://github.com/tr1ckydev/spotifly/blob/main/LICENSE) for full license text.
