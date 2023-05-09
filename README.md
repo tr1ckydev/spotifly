@@ -97,7 +97,7 @@ The main module containing all the Spotify API functions.
 
   Fetch the details of the provided playlist id, with optional limit for amount of tracks to fetch.
 
-- ### `getUser(id: string, config?:  { playlistLimit?: number, artistLimit?: number, episodeLimit?: number })`: [*`Promise<SpotifyUser>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/user.ts)
+- ### `getUser(id: string, config?: { playlistLimit?: number, artistLimit?: number, episodeLimit?: number })`: [*`Promise<SpotifyUser>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/user.ts)
 
   Fetch the details of the provided user id, with optional limit for amount of tracks to fetch.
 
