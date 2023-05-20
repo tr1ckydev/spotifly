@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { Spotifly } from "../src/index"
+import { Spotifly } from "../src"
 
 const sp = new Spotifly();
 
