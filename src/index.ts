@@ -1,21 +1,11 @@
+import { SpotiflyBase } from "./base.js";
 import { Musixmatch } from "./musixmatch.js";
-import { SpotifyAlbum, SpotifyArtist, SpotifyEpisode, SpotifyExtractedColors, SpotifyGetToken, SpotifyHome, SpotifyPlaylist, SpotifyPodcast, SpotifyPodcastEpisodes, SpotifyRelatedTrackArtists, SpotifySearchAlbums, SpotifySearchAll, SpotifySearchArtists, SpotifySearchPlaylists, SpotifySearchPodcasts, SpotifySearchTracks, SpotifySearchUsers, SpotifySection, SpotifyTrack, SpotifyUser } from "./types/index";
+import { SpotifyAlbum, SpotifyArtist, SpotifyColorLyrics, SpotifyEpisode, SpotifyExtractedColors, SpotifyGetToken, SpotifyHome, SpotifyMyLibrary, SpotifyMyProfile, SpotifyPlaylist, SpotifyPlaylistContents, SpotifyPlaylistMetadata, SpotifyPodcast, SpotifyPodcastEpisodes, SpotifyProductState, SpotifyRelatedTrackArtists, SpotifySearchAlbums, SpotifySearchAll, SpotifySearchArtists, SpotifySearchPlaylists, SpotifySearchPodcasts, SpotifySearchTracks, SpotifySearchUsers, SpotifySection, SpotifyTrack, SpotifyTrackCredits, SpotifyUser } from "./types";
 
-export class Spotifly {
+class SpotiflyMain extends SpotiflyBase {
 
-    private token = "";
-    private tokenExpirationTimestampMs = -1;
-
-    private async refreshToken() {
-        if (this.tokenExpirationTimestampMs > Date.now()) return;
-        const response: SpotifyGetToken = await (await fetch("https://open.spotify.com/get_access_token")).json();
-        this.token = "Bearer " + response.accessToken;
-        this.tokenExpirationTimestampMs = response.accessTokenExpirationTimestampMs;
-    }
-
-    private async fetch<T>(url: string) {
-        await this.refreshToken();
-        return (await fetch(url, { headers: { authorization: this.token } })).json() as Promise<T>;
+    constructor(cookie?: string) {
+        super(cookie);
     }
 
     public async getHomepage() {
@@ -24,6 +14,10 @@ export class Spotifly {
 
     public async getTrack(id: string) {
         return this.fetch<SpotifyTrack>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=getTrack&variables=%7B%22uri%22%3A%22spotify%3Atrack%3A${id}%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22d208301e63ccb8504831114cb8db1201636a016187d7c832c8c00933e2cd64c6%22%7D%7D`);
+    }
+
+    public async getTrackCredits(id: string) {
+        return this.fetch<SpotifyTrackCredits>(`https://spclient.wg.spotify.com/track-credits-view/v0/experimental/${id}/credits`);
     }
 
     public async getRelatedTrackArtists(id: string) {
@@ -36,10 +30,6 @@ export class Spotifly {
 
     public async getAlbum(id: string, limit = 50) {
         return this.fetch<SpotifyAlbum>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=getAlbum&variables=%7B%22uri%22%3A%22spotify%3Aalbum%3A${id}%22%2C%22locale%22%3A%22%22%2C%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%2246ae954ef2d2fe7732b4b2b4022157b2e18b7ea84f70591ceb164e4de1b5d5d3%22%7D%7D`);
-    }
-
-    public async getPlaylist(id: string, limit = 50) {
-        return this.fetch<SpotifyPlaylist>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=fetchPlaylist&variables=%7B%22uri%22%3A%22spotify%3Aplaylist%3A${id}%22%2C%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22e578eda4f77aae54294a48eac85e2a42ddb203faf6ea12b3fddaec5aa32918a3%22%7D%7D`);
     }
 
     public async getUser(id: string, config = { playlistLimit: 10, artistLimit: 10, episodeLimit: 10 }) {
@@ -99,8 +89,31 @@ export class Spotifly {
         return this.fetch<SpotifyExtractedColors>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=fetchExtractedColors&variables=%7B%22uris%22%3A${encodeURIComponent(JSON.stringify(urls))}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22d7696dd106f3c84a1f3ca37225a1de292e66a2d5aced37a66632585eeb3bbbfa%22%7D%7D`);
     }
 
+    /* Cookie Exclusive Functions */
+
+    public async getMyLibrary(config: Partial<{
+        filter: [] | ["Playlists"] | ["Playlists", "By you"] | ["Artists"],
+        order: "Recents" | "Recently Added" | "Alphabetical" | "Creator" | "Custom Order",
+        textFilter: string,
+        limit: number
+    }> = { filter: [], order: "Recents", textFilter: "", limit: 50 }) {
+        return this.fetch<SpotifyMyLibrary>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=libraryV2&variables=%7B%22filters%22%3A${encodeURIComponent(JSON.stringify(config.filter))}%2C%22order%22%3A%22${config.order}%22%2C%22textFilter%22%3A%22${config.textFilter}%22%2C%22features%22%3A%5B%22LIKED_SONGS%22%2C%22YOUR_EPISODES%22%5D%2C%22limit%22%3A${config.limit}%2C%22offset%22%3A0%2C%22flatten%22%3Atrue%2C%22folderUri%22%3Anull%2C%22includeFoldersWhenFlattening%22%3Atrue%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22e1f99520ac4e82cba64e9ebdee4ed5532024ee5af6956e8465e99709a8f8348f%22%7D%7D`);
+    }
+
+    public async getMyProductState() {
+        return this.fetch<SpotifyProductState>("https://spclient.wg.spotify.com/melody/v1/product_state?market=from_token");
+    }
+
+    public async getTrackColorLyrics(id: string, imgUrl?: string) {
+        return this.fetch<SpotifyColorLyrics>(
+            `https://spclient.wg.spotify.com/color-lyrics/v2/track/${id}${imgUrl ? `/image/${encodeURIComponent(imgUrl)}` : ""}?format=json&vocalRemoval=false&market=from_token`,
+            { "app-platform": "WebPlayer" }
+        );
+    }
+
 }
 
+export { SpotiflyMain as Spotifly }
 export { Parse } from "./parse.js";
 export { Musixmatch };
 
