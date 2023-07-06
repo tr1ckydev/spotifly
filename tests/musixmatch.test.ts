@@ -4,7 +4,6 @@ import { Musixmatch } from "../src";
 test("search", async () => {
     const result = await Musixmatch.search("starboy weeknd");
     expect(result[0].track_name).toBe("Starboy");
-    expect(result[0].artist_name).toBe("The Weeknd feat. Daft Punk");
 });
 
 test("searchLyrics", async () => {

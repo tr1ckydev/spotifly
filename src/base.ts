@@ -1,10 +1,10 @@
-import { SpotifyGetToken, SpotifyMyProfile, SpotifyPlaylist, SpotifyPlaylistContents, SpotifyPlaylistMetadata } from "./types";
+import { SpotifyGetToken, SpotifyMyProfile, SpotifyPlaylistContents, SpotifyPlaylistMetadata } from "./types";
 
 export class SpotiflyBase {
 
     protected token = "";
     protected tokenExpirationTimestampMs = -1;
-    private cookie: string;
+    protected cookie: string;
     private myProfileId = "";
 
     constructor(cookie?: string) {
@@ -20,15 +20,24 @@ export class SpotiflyBase {
         this.tokenExpirationTimestampMs = response.accessTokenExpirationTimestampMs;
     }
 
-    protected async fetch<T>(url: string, optionalHeaders?: { [index: string]: string }) {
+    protected async fetch<T>(url: string, optionalHeaders?: { [index: string]: string; }) {
         await this.refreshToken();
         return (await fetch(url, {
             headers: { authorization: this.token, ...optionalHeaders }
         })).json<T>();
     }
 
-    protected async getPlaylist(id: string, limit = 50) {
-        return this.fetch<SpotifyPlaylist>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=fetchPlaylist&variables=%7B%22uri%22%3A%22spotify%3Aplaylist%3A${id}%22%2C%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22e578eda4f77aae54294a48eac85e2a42ddb203faf6ea12b3fddaec5aa32918a3%22%7D%7D`);
+    protected async post<T>(url: string, body: string) {
+        await this.refreshToken();
+        return (await fetch(url, {
+            headers: {
+                authorization: this.token,
+                accept: "application/json",
+                "content-type": "application/json"
+            },
+            method: "POST",
+            body: body
+        })).json<T>();
     }
 
     protected async getPlaylistMetadata(id: string, limit = 50) {
@@ -40,10 +49,11 @@ export class SpotiflyBase {
     }
 
     protected async getMyProfile() {
+        if (!this.cookie) throw Error("no cookie provided");
         return this.fetch<SpotifyMyProfile>("https://api.spotify.com/v1/me");
     }
 
-    public async getMyProfileId() {
+    protected async getMyProfileId() {
         return this.myProfileId === "" ? this.myProfileId = (await this.getMyProfile()).id : this.myProfileId;
     }
 

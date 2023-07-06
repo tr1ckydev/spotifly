@@ -1,16 +1,21 @@
 import { expect, test } from "bun:test";
-import { Spotifly } from "../src"
+import { Spotifly } from "../src";
 
-const sp = new Spotifly();
+const sp = new Spotifly(process.env.SPOTIFY_COOKIE);
 
 test("getHomepage", async () => {
     const home = await sp.getHomepage();
-    expect(home.data.home.greeting.text).toContain("Good");
+    expect(home.data.home.greeting.text).toStartWith("Good");
 });
 
 test("getTrack", async () => {
     const track = await sp.getTrack("7MXVkk9YMctZqd1Srtv4MB");
     expect(track.data.trackUnion.name).toBe("Starboy");
+});
+
+test("getTrackCredits", async () => {
+    const track = await sp.getTrackCredits("7MXVkk9YMctZqd1Srtv4MB");
+    expect(track.trackTitle).toBe("Starboy");
 });
 
 test("getRelatedTrackArtists", async () => {
@@ -33,14 +38,24 @@ test("getPlaylist", async () => {
     expect(playlist.data.playlistV2.name).toBe("phonk");
 });
 
+test("getPlaylistMetadata", async () => {
+    const playlist = await sp.getPlaylistMetadata("37i9dQZF1DWWY64wDtewQt", 0);
+    expect(playlist.data.playlistV2.name).toBe("phonk");
+});
+
+test("getPlaylistContents", async () => {
+    const playlist = await sp.getPlaylistContents("37i9dQZF1DWWY64wDtewQt", 0);
+    expect(playlist.data.playlistV2.content.items).toBeArray();
+});
+
 test("getUser", async () => {
     const user = await sp.getUser("p2ztvcigo8b6m046a4gbczu3w");
     expect(user.name).toBe("meow");
 });
 
 test("getSection", async () => {
-    const user = await sp.getSection("0JQ5DAuChZYPe9iDhh2mJz");
-    expect(user.data.homeSections.__typename).toBe("HomeSectionCollection");
+    const section = await sp.getSection("0JQ5DAuChZYPe9iDhh2mJz");
+    expect(section.data.homeSections.__typename).toBe("HomeSectionCollection");
 });
 
 test("getPodcast", async () => {
@@ -101,4 +116,29 @@ test("getTrackLyrics", async () => {
 test("extractImageColors", async () => {
     const colors = await sp.extractImageColors("https://i.scdn.co/image/ab67616d00001e024718e2b124f79258be7bc452");
     expect(colors.data.extractedColors[0].colorRaw.hex).toBe("#A00030");
+});
+
+test("getMyProfile", async () => {
+    const profile = await sp.getMyProfile();
+    expect(profile.id).toBeString();
+});
+
+test("getMyLibrary", async () => {
+    const library = await sp.getMyLibrary();
+    expect(library.data.me.libraryV2.page.items.length).toBeGreaterThan(1);
+});
+
+test("getMyProductState", async () => {
+    const state = await sp.getMyProductState();
+    expect(state.product).toBeString();
+});
+
+test("getTrackColorLyrics", async () => {
+    const lyrics = await sp.getTrackColorLyrics("7MXVkk9YMctZqd1Srtv4MB");
+    expect(lyrics.lyrics.lines[0].words).toBe("I'm tryna put you in the worst mood, ah");
+});
+
+test("getMyLikedSongs", async () => {
+    const songs = await sp.getMyLikedSongs();
+    expect(songs.data.me.library.tracks.items).toBeArray();
 });

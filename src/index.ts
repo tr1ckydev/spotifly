@@ -1,6 +1,6 @@
 import { SpotiflyBase } from "./base.js";
 import { Musixmatch } from "./musixmatch.js";
-import { SpotifyAlbum, SpotifyArtist, SpotifyColorLyrics, SpotifyEpisode, SpotifyExtractedColors, SpotifyGetToken, SpotifyHome, SpotifyMyLibrary, SpotifyMyProfile, SpotifyPlaylist, SpotifyPlaylistContents, SpotifyPlaylistMetadata, SpotifyPodcast, SpotifyPodcastEpisodes, SpotifyProductState, SpotifyRelatedTrackArtists, SpotifySearchAlbums, SpotifySearchAll, SpotifySearchArtists, SpotifySearchPlaylists, SpotifySearchPodcasts, SpotifySearchTracks, SpotifySearchUsers, SpotifySection, SpotifyTrack, SpotifyTrackCredits, SpotifyUser } from "./types";
+import { SpotifyAlbum, SpotifyArtist, SpotifyColorLyrics, SpotifyEpisode, SpotifyExtractedColors, SpotifyHome, SpotifyLikedSongs, SpotifyLikedSongsAdd, SpotifyLikedSongsRemove, SpotifyMyLibrary, SpotifyPlaylist, SpotifyPodcast, SpotifyPodcastEpisodes, SpotifyProductState, SpotifyRelatedTrackArtists, SpotifySearchAlbums, SpotifySearchAll, SpotifySearchArtists, SpotifySearchPlaylists, SpotifySearchPodcasts, SpotifySearchTracks, SpotifySearchUsers, SpotifySection, SpotifyTrack, SpotifyTrackCredits, SpotifyUser } from "./types";
 
 class SpotiflyMain extends SpotiflyBase {
 
@@ -30,6 +30,18 @@ class SpotiflyMain extends SpotiflyBase {
 
     public async getAlbum(id: string, limit = 50) {
         return this.fetch<SpotifyAlbum>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=getAlbum&variables=%7B%22uri%22%3A%22spotify%3Aalbum%3A${id}%22%2C%22locale%22%3A%22%22%2C%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%2246ae954ef2d2fe7732b4b2b4022157b2e18b7ea84f70591ceb164e4de1b5d5d3%22%7D%7D`);
+    }
+
+    public async getPlaylist(id: string, limit = 50) {
+        return this.fetch<SpotifyPlaylist>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=fetchPlaylist&variables=%7B%22uri%22%3A%22spotify%3Aplaylist%3A${id}%22%2C%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22e578eda4f77aae54294a48eac85e2a42ddb203faf6ea12b3fddaec5aa32918a3%22%7D%7D`);
+    }
+
+    public async getPlaylistMetadata(id: string, limit = 50) {
+        return super.getPlaylistMetadata(id, limit);
+    }
+
+    public async getPlaylistContents(id: string, limit = 50) {
+        return super.getPlaylistContents(id, limit);
     }
 
     public async getUser(id: string, config = { playlistLimit: 10, artistLimit: 10, episodeLimit: 10 }) {
@@ -91,20 +103,48 @@ class SpotiflyMain extends SpotiflyBase {
 
     /* Cookie Exclusive Functions */
 
+    public async getMyProfile() {
+        return super.getMyProfile();
+    }
+
     public async getMyLibrary(config: Partial<{
         filter: [] | ["Playlists"] | ["Playlists", "By you"] | ["Artists"],
         order: "Recents" | "Recently Added" | "Alphabetical" | "Creator" | "Custom Order",
         textFilter: string,
-        limit: number
+        limit: number;
     }> = { filter: [], order: "Recents", textFilter: "", limit: 50 }) {
+        if (!this.cookie) throw Error("no cookie provided");
         return this.fetch<SpotifyMyLibrary>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=libraryV2&variables=%7B%22filters%22%3A${encodeURIComponent(JSON.stringify(config.filter))}%2C%22order%22%3A%22${config.order}%22%2C%22textFilter%22%3A%22${config.textFilter}%22%2C%22features%22%3A%5B%22LIKED_SONGS%22%2C%22YOUR_EPISODES%22%5D%2C%22limit%22%3A${config.limit}%2C%22offset%22%3A0%2C%22flatten%22%3Atrue%2C%22folderUri%22%3Anull%2C%22includeFoldersWhenFlattening%22%3Atrue%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%22e1f99520ac4e82cba64e9ebdee4ed5532024ee5af6956e8465e99709a8f8348f%22%7D%7D`);
     }
 
     public async getMyProductState() {
+        if (!this.cookie) throw Error("no cookie provided");
         return this.fetch<SpotifyProductState>("https://spclient.wg.spotify.com/melody/v1/product_state?market=from_token");
     }
 
+    public async getMyLikedSongs(limit = 25) {
+        if (!this.cookie) throw Error("no cookie provided");
+        return this.fetch<SpotifyLikedSongs>(`https://api-partner.spotify.com/pathfinder/v1/query?operationName=fetchLibraryTracks&variables=%7B%22offset%22%3A0%2C%22limit%22%3A${limit}%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%228474ec383b530ce3e54611fca2d8e3da57ef5612877838b8dbf00bd9fc692dfb%22%7D%7D`);
+    }
+
+    public async addToLikedSongs(...trackUris: string[]) {
+        if (!this.cookie) throw Error("no cookie provided");
+        return this.post<SpotifyLikedSongsAdd>(
+            "https://api-partner.spotify.com/pathfinder/v1/query",
+            `{"variables":{"uris":${JSON.stringify(trackUris)}},"operationName":"addToLibrary","extensions":{"persistedQuery":{"version":1,"sha256Hash":"656c491c3f65d9d08d259be6632f4ef1931540ebcf766488ed17f76bb9156d15"}}}`
+        );
+    }
+
+    public async removeFromLikedSongs(...trackUris: string[]) {
+        if (!this.cookie) throw Error("no cookie provided");
+        return this.post<SpotifyLikedSongsRemove>(
+            "https://api-partner.spotify.com/pathfinder/v1/query",
+            `{"variables":{"uris":${JSON.stringify(trackUris)}},"operationName":"removeFromLibrary","extensions":{"persistedQuery":{"version":1,"sha256Hash":"1103bfd4b9d80275950bff95ef6d41a02cec3357e8f7ecd8974528043739677c"}}}`
+        );
+    }
+
     public async getTrackColorLyrics(id: string, imgUrl?: string) {
+        if (!this.cookie) throw Error("no cookie provided");
         return this.fetch<SpotifyColorLyrics>(
             `https://spclient.wg.spotify.com/color-lyrics/v2/track/${id}${imgUrl ? `/image/${encodeURIComponent(imgUrl)}` : ""}?format=json&vocalRemoval=false&market=from_token`,
             { "app-platform": "WebPlayer" }
@@ -113,7 +153,6 @@ class SpotiflyMain extends SpotiflyBase {
 
 }
 
-export { SpotiflyMain as Spotifly }
 export { Parse } from "./parse.js";
-export { Musixmatch };
-
+export { SpotiflyPlaylist } from "./playlist.js";
+export { Musixmatch, SpotiflyMain as Spotifly };

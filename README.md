@@ -8,6 +8,7 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 - Super fast like the Web API.
 - Lightweight with zero dependencies.
 - Strongly typed API functions.
+- Personalized fetching and automation using cookies.
 - Automatic internal token refreshing.
 
 ...along with a [Musixmatch API module](#musixmatch-module). Works without any authentication too.
@@ -18,7 +19,7 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 
 - ### Requirement
 
-  `node.js (>=17.5.0)` or `bun` runtime.
+  `node.js (>=17.5.0)`, `bun` or `deno` runtime.
 
 - ### Installation
 
@@ -38,13 +39,18 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 
 ## 📖 Documentation
 
+Functions marked with an asterisk (*) require your spotify cookies to work. How to get your Spotify cookies ?
+
 - [`Spotifly` module](#spotifly-module)
   - [`getHomepage`](#gethomepage-promisespotifyhome)
   - [`getTrack`](#gettrackid-string-promisespotifytrack)
+  - `getTrackCredits`
   - [`getRelatedTrackArtists`](#getrelatedtrackartistsid-string-promisespotifyrelatedtrackartists)
   - [`getArtist`](#getartistid-string-promisespotifyartist)
   - [`getAlbum`](#getalbumid-string-limit-number-promisespotifyalbum)
   - [`getPlaylist`](#getplaylistid-string-limit-number-promisespotifyplaylist)
+  - `getPlaylistMetadata`
+  - `getPlaylistContents`
   - [`getUser`](#getuserid-string-config---playlistlimit-number-artistlimit-number-episodelimit-number--promisespotifyuser)
   - [`getSection`](#getsectionid-string-promisespotifysection)
   - [`getPodcast`](#getpodcastid-string-promisespotifypodcast)
@@ -59,6 +65,24 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
   - [`searchPodcasts`](#searchpodcaststerms-string-limit-number-promisespotifysearchpodcasts)
   - [`getTrackLyrics`](#gettracklyricsid-string-promisestring)
   - [`extractImageColors`](#extractimagecolorsurls-string-promisespotifyextractedcolors)
+  - *`getMyProfile`
+  - *`getMyLibrary`
+  - *`getMyProductState`
+  - *`getMyLikedSongs`
+  - *`addToLikedSongs`
+  - *`removeFromLikedSongs`
+  - *`getTrackColorLyrics`
+- *`SpotiflyPlaylist` module
+  - `id`
+  - `create`
+  - `rename`
+  - `changeDescription`
+  - `fetchMetadata`
+  - `fetchContents`
+  - `add`
+  - `remove`
+  - `cloneFrom`
+  - `delete`
 - [`Musixmatch` module](#musixmatch-module)
   - [`search`](#searchterms-string-musixmatchsearch)
   - [`getLyricsFromUrl`](#getlyricsfromurlurl-string-string)
@@ -66,10 +90,14 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 - [`Parse` module](#parse-module)
   - [`urlToId`](#urltoidurl-string-string)
   - [`uriToId`](#uritoiduri-string-string)
+  - `urlToUri`
+  - `uriToUrl`
 
 
 
 ## `Spotifly` module
+
+### `new Spotifly(cookie?: string)`
 
 The main module containing all the Spotify API functions.
 
@@ -80,6 +108,10 @@ The main module containing all the Spotify API functions.
 - ### `getTrack(id: string)`: [*`Promise<SpotifyTrack>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/track.ts)
 
   Fetch the details of the provided track id.
+
+- ### `getTrackCredits(id: string)`: [*`Promise<SpotifyTrackCredits>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/trackCredits.ts)
+
+  Fetch the credits of the provided track id.
 
 - ### `getRelatedTrackArtists(id: string)`: [*`Promise<SpotifyRelatedTrackArtists>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/relatedTrackArtists.ts)
 
@@ -95,7 +127,15 @@ The main module containing all the Spotify API functions.
 
 - ### `getPlaylist(id: string, limit?: number)`: [*`Promise<SpotifyPlaylist>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/playlist.ts)
 
-  Fetch the details of the provided playlist id, with optional limit for amount of tracks to fetch.
+  Fetch all the details of the provided playlist id, with optional limit for amount of tracks to fetch.
+
+- ### `getPlaylistMetadata(id: string, limit?: number)`: [*`Promise<SpotifyPlaylistMetadata>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/playlistMetadata.ts)
+
+  Fetch the metadata only of the provided playlist id, with optional limit for amount of tracks to fetch.
+
+- ### `getPlaylistContents(id: string, limit?: number)`: [*`Promise<SpotifyPlaylistContents>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/playlistContents.ts)
+
+  Fetch the contents of the provided playlist id, with optional limit for amount of tracks to fetch.
 
 - ### `getUser(id: string, config?: { playlistLimit?: number, artistLimit?: number, episodeLimit?: number })`: [*`Promise<SpotifyUser>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/user.ts)
 
@@ -153,6 +193,89 @@ The main module containing all the Spotify API functions.
 
   Extract raw, dark and light colors from the provided urls of images using Spotify API.
 
+> The following functions require cookies to work. How to get your Spotify cookies ?
+
+- ### `getMyProfile()`: [*`Promise<SpotifyMyProfile>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/myProfile.ts)
+
+  Fetch the details of your Spotify profile.
+
+- ### `getMyLibrary(config?)`: [*`Promise<SpotifyMyLibrary>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/myLibrary.ts)
+
+  Fetch your Spotify library.
+
+  - config.filter?: `[] | ["Playlists"] | ["Playlists", "By you"] | ["Artists"]`
+  - config.order?: `"Recents" | "Recently Added" | "Alphabetical" | "Creator" | "Custom Order"`
+  - config.textFilter?: `string`
+  - config.limit?: `number`
+
+- ### `getMyProductState()`: [*`Promise<SpotifyProductState>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/productState.ts)
+
+  Fetch the details of your Spotify product state like premium plan, etc.
+
+- ### `getMyLikedSongs()`: [*`Promise<SpotifyLikedSongs>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/likedSongs.ts)
+
+  Fetch the songs you have liked from your Spotify library.
+
+- ### `addToLikedSongs(...trackUris: string[])`: [*`Promise<SpotifyLikedSongsAdd>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/likedSongs.ts)
+
+  Add the tracks to your liked songs library.
+
+- ### `removeFromLikedSongs(...trackUris: string[])`: [*`Promise<SpotifyLikedSongsRemove>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/likedSongs.ts)
+
+  Remove the tracks from your liked songs library.
+
+- ### `getTrackColorLyrics(id: string, imgUrl?: string)`: [*`Promise<SpotifyColorLyrics>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/likedSongs.ts)
+
+  Fetch the track lyrics directly from Spotify's internal Musixmatch API with an optional image url to fetch the colors of that image.
+
+
+
+## `SpotiflyPlaylist` module
+
+### `new SpotiflyPlaylist(cookie: string)`
+
+The module containing all the functions to interact with playlists in your Spotify library using the cookies provided. How to get your Spotify cookies ?
+
+- ### `id`: `string`
+
+  Property to get or set the playlist id with whom the following functions will be interacting.
+
+- ### `create(name: string)`
+
+  Create a new empty playlist with the provided name in your Spotify library and sets the `id` with the newly created one.
+
+- ### `rename(newName: string)`
+
+  Change the name of the playlist with the new name provided.
+
+- ### `changeDescription(newDescription: string)`
+
+  Change the description of the playlist with the new description provided.
+
+- ### `fetchMetadata(limit?: number)`
+
+  Fetch the metadata of the playlist.
+
+- ### `fetchContents(limit?: number)`
+
+  Fetch the contents of the playlist.
+
+- ### `add(...trackUris: string[])`
+
+  Add tracks to the playlist from the provided track uris.
+
+- ### `remove(...trackUris: string[])`
+
+  Remove tracks from the playlist from the provided track uris.
+
+- ### `cloneFrom(id: string, config?: { name?: string, description?: string, limit?: number; })`
+
+  Create a new playlist in your Spotify library by cloning from another playlist with optional config to change the data of the created playlist and sets the `id` with the newly created one.
+
+- ### `delete()`
+
+  Delete the playlist from your Spotify library.
+
 
 
 ## `Musixmatch` module
@@ -181,11 +304,30 @@ The parsing module containing few utility functions.
 
   Extract the id from an `open.spotify.com` url.
 
-  
-
 - ### `uriToId(uri: string)`: *`string`*
 
-  Extract the id from a spotify uri (i.e. `spotify:track:abcdefghijk`).
+  Extract the id from a Spotify uri (i.e. `spotify:track:abcdefghijk`).
+  
+- ### `urlToUri(url: string)`: `string`
+
+  Convert an `open.spotify.com` url to a Spotify uri (i.e. `spotify:track:abcdefghijk`).
+
+- ### `uriToUrl(uri: string)`: `string`
+
+  Convert a Spotify uri (i.e. `spotify:track:abcdefghijk`) to an `open.spotify.com` url.
+
+
+
+## 🍪 How to get your Spotify cookies ?
+
+- Login to your Spotify account in your browser.
+- Open *Developer Tools* of your browser and switch to *Network* tab.
+- Go to https://open.spotify.com/.
+- Find the request with the name `open.spotify.com` and open it.
+- From the *Headers* tab, scroll to *Request Headers* section.
+- Copy the contents of the `Cookie` header value.
+
+The copied value is your Spotify cookies.
 
 
 

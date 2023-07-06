@@ -26,3 +26,4 @@ export { SpotifyMyLibrary } from "./myLibrary";
 export { SpotifyProductState } from "./productState";
 export { SpotifyColorLyrics } from "./colorLyrics";
 export { SpotifyTrackCredits } from "./trackCredits";
+export { SpotifyLikedSongs, SpotifyLikedSongsAdd, SpotifyLikedSongsRemove } from "./likedSongs";
