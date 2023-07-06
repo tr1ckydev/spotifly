@@ -39,18 +39,18 @@ Spotify library in typescript without using the [Spotify Web API](https://develo
 
 ## 📖 Documentation
 
-Functions marked with an asterisk (*) require your spotify cookies to work. How to get your Spotify cookies ?
+Functions marked with an asterisk (*) require your spotify cookies to work. [How to get your Spotify cookies ?](#-how-to-get-your-spotify-cookies-)
 
 - [`Spotifly` module](#spotifly-module)
   - [`getHomepage`](#gethomepage-promisespotifyhome)
   - [`getTrack`](#gettrackid-string-promisespotifytrack)
-  - `getTrackCredits`
+  - [`getTrackCredits`](#gettrackcreditsid-string-promisespotifytrackcredits)
   - [`getRelatedTrackArtists`](#getrelatedtrackartistsid-string-promisespotifyrelatedtrackartists)
   - [`getArtist`](#getartistid-string-promisespotifyartist)
   - [`getAlbum`](#getalbumid-string-limit-number-promisespotifyalbum)
   - [`getPlaylist`](#getplaylistid-string-limit-number-promisespotifyplaylist)
-  - `getPlaylistMetadata`
-  - `getPlaylistContents`
+  - [`getPlaylistMetadata`](#getplaylistmetadataid-string-limit-number-promisespotifyplaylistmetadata)
+  - [`getPlaylistContents`](#getplaylistcontentsid-string-limit-number-promisespotifyplaylistcontents)
   - [`getUser`](#getuserid-string-config---playlistlimit-number-artistlimit-number-episodelimit-number--promisespotifyuser)
   - [`getSection`](#getsectionid-string-promisespotifysection)
   - [`getPodcast`](#getpodcastid-string-promisespotifypodcast)
@@ -65,24 +65,24 @@ Functions marked with an asterisk (*) require your spotify cookies to work. How 
   - [`searchPodcasts`](#searchpodcaststerms-string-limit-number-promisespotifysearchpodcasts)
   - [`getTrackLyrics`](#gettracklyricsid-string-promisestring)
   - [`extractImageColors`](#extractimagecolorsurls-string-promisespotifyextractedcolors)
-  - *`getMyProfile`
-  - *`getMyLibrary`
-  - *`getMyProductState`
-  - *`getMyLikedSongs`
-  - *`addToLikedSongs`
-  - *`removeFromLikedSongs`
-  - *`getTrackColorLyrics`
-- *`SpotiflyPlaylist` module
-  - `id`
-  - `create`
-  - `rename`
-  - `changeDescription`
-  - `fetchMetadata`
-  - `fetchContents`
-  - `add`
-  - `remove`
-  - `cloneFrom`
-  - `delete`
+  - *[`getMyProfile`](#getmyprofile-promisespotifymyprofile)
+  - *[`getMyLibrary`](#getmylibraryconfig-promisespotifymylibrary)
+  - *[`getMyProductState`](#getmyproductstate-promisespotifyproductstate)
+  - *[`getMyLikedSongs`](#getmylikedsongs-promisespotifylikedsongs)
+  - *[`addToLikedSongs`](#addtolikedsongstrackuris-string-promisespotifylikedsongsadd)
+  - *[`removeFromLikedSongs`](#removefromlikedsongstrackuris-string-promisespotifylikedsongsremove)
+  - *[`getTrackColorLyrics`](#gettrackcolorlyricsid-string-imgurl-string-promisespotifycolorlyrics)
+- *[`SpotiflyPlaylist` module](#spotiflyplaylist-module)
+  - [`id`](#id-string)
+  - [`create`](#createname-string)
+  - [`rename`](#renamenewname-string)
+  - [`changeDescription`](#changedescriptionnewdescription-string)
+  - [`fetchMetadata`](#fetchmetadatalimit-number)
+  - [`fetchContents`](#fetchcontentslimit-number)
+  - [`add`](#addtrackuris-string)
+  - [`remove`](#removetrackuris-string)
+  - [`cloneFrom`](#clonefromid-string-config--name-string-description-string-limit-number-)
+  - [`delete`](#delete)
 - [`Musixmatch` module](#musixmatch-module)
   - [`search`](#searchterms-string-musixmatchsearch)
   - [`getLyricsFromUrl`](#getlyricsfromurlurl-string-string)
@@ -90,8 +90,9 @@ Functions marked with an asterisk (*) require your spotify cookies to work. How 
 - [`Parse` module](#parse-module)
   - [`urlToId`](#urltoidurl-string-string)
   - [`uriToId`](#uritoiduri-string-string)
-  - `urlToUri`
-  - `uriToUrl`
+  - [`urlToUri`](#urltouriurl-string-string)
+  - [`uriToUrl`](#uritourluri-string-string)
+- [How to get your Spotify cookies ?](#-how-to-get-your-spotify-cookies-)
 
 
 
@@ -189,11 +190,13 @@ The main module containing all the Spotify API functions.
 
   Fetch the lyrics of the provided track id through the [`Musixmatch`](#musixmatch-module) module.
 
+  If you want to fetch lyrics directly from Spotify, see [`getTrackColorLyrics`](#gettrackcolorlyricsid-string-imgurl-string-promisespotifycolorlyrics).
+
 - ### `extractImageColors(...urls: string[])`: [*`Promise<SpotifyExtractedColors>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/extractedColors.ts)
 
   Extract raw, dark and light colors from the provided urls of images using Spotify API.
 
-> The following functions require cookies to work. How to get your Spotify cookies ?
+> The following functions require cookies to work. [How to get your Spotify cookies ?](#-how-to-get-your-spotify-cookies-)
 
 - ### `getMyProfile()`: [*`Promise<SpotifyMyProfile>`*](https://github.com/tr1ckydev/spotifly/blob/main/src/types/myProfile.ts)
 
@@ -234,7 +237,7 @@ The main module containing all the Spotify API functions.
 
 ### `new SpotiflyPlaylist(cookie: string)`
 
-The module containing all the functions to interact with playlists in your Spotify library using the cookies provided. How to get your Spotify cookies ?
+The module containing all the functions to interact with playlists in your Spotify library using the cookies provided. [How to get your Spotify cookies ?](#-how-to-get-your-spotify-cookies-)
 
 - ### `id`: `string`
 
